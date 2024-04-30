@@ -1,0 +1,62 @@
+.navbar {
+	width: 100%;
+	height: 70px;
+	background-color: #0769aa;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.navbar h1 {
+	color: white;
+	font-size: 25px;
+	margin-left: 20px;
+}
+
+.item_list {
+	list-style: none;
+	padding: 0;
+	display: flex;
+	flex-wrap: wrap;
+  }
+  
+  .item {
+	flex: 0 0 calc(10% - 10px); /* Adjust the width as needed */
+	margin: 5px;
+  }
+  
+  .item_image {
+	max-width: 100%;
+	height: auto;
+	margin-bottom: 10px;
+  }
+
+ .modal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 80%;
+  max-height: 80%;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  overflow-y: auto; /* Use a separate class to set overflow-y */
+}
+
+ 
