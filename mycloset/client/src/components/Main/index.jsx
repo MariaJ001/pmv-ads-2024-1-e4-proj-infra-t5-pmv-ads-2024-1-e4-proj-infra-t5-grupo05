@@ -3,13 +3,17 @@ import styles from "./styles.module.css";
 import AddItemModal from './AddItemModal';
 import ItemDetailsModal from './ItemDetailsModal';
 import { v4 as uuidv4 } from 'uuid';
+import Modal from 'react-modal';
+
+Modal.setAppElement('#root');
 
 function Main() {
   const [items, setItems] = useState([]);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
-  const [searchTerm, setSearchTerm] = useState(""); // New state for search term
+  const [searchTerm, setSearchTerm] = useState("");
+  const [favorites, setFavorites] = useState([]); // State for favorites
 
   const handleAddItem = (newItem) => {
     newItem.id = uuidv4();
@@ -18,22 +22,25 @@ function Main() {
   };
 
   const handleLogout = () => {
-      localStorage.removeItem("token");
-      window.location.reload();
-    };
-  
-
-  const handleItemClick = (item) => {
-    setSelectedItem(item);
-    setIsDetailsModalOpen(true);
+    localStorage.removeItem("token");
+    window.location.reload();
   };
 
-  // Function to handle search
+  const handleItemClick = (item, event) => {
+    if (event.target.type !== "checkbox") {
+      setSelectedItem(item);
+      setIsDetailsModalOpen(true);
+    }
+  };
+
   const handleSearch = (searchTerm) => {
     setSearchTerm(searchTerm);
   };
 
-  // Filtered items based on search term
+  const addToFavorites = (item) => {
+    setFavorites([...favorites, item]);
+  };
+
   const filteredItems = items.filter(item =>
     item.itemName.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -46,7 +53,7 @@ function Main() {
           Sair
         </button>
       </nav>
-      <hr></hr>
+      <hr />
       <div className={styles.search_container}>
         <input
           type="text"
@@ -64,12 +71,12 @@ function Main() {
         
         <ul className={styles.item_list}>
           {filteredItems.map((item) => (
-            <li key={item.id} className={styles.item} onClick={() => handleItemClick(item)}>
+            <li key={item.id} className={styles.item} onClick={(e) => handleItemClick(item, e)}>
               {item.itemImage && <img src={URL.createObjectURL(item.itemImage)} alt={item.itemName} className={styles.item_image} />}
+              <input type="checkbox" onChange={() => addToFavorites(item)} /> {/* Checkbox for adding to favorites */}
             </li>
           ))}
         </ul>
-        
       </div>
       <div className={styles.fixed_button_container}>
         <button onClick={() => setIsAddModalOpen(true)} className={styles.fixed_button}>Add</button>
