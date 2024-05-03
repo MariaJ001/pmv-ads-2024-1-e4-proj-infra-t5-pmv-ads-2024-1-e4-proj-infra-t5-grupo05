@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import styles from "./styles.module.css";
-import Modal from 'react-modal';
 import AddItemModal from './AddItemModal';
 import ItemDetailsModal from './ItemDetailsModal';
 import { v4 as uuidv4 } from 'uuid';
@@ -10,6 +9,7 @@ function Main() {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
+  const [searchTerm, setSearchTerm] = useState(""); // New state for search term
 
   const handleAddItem = (newItem) => {
     newItem.id = uuidv4();
@@ -18,13 +18,25 @@ function Main() {
   };
 
   const handleLogout = () => {
-    console.log('Logout functionality will be implemented here');
-  };
+      localStorage.removeItem("token");
+      window.location.reload();
+    };
+  
 
   const handleItemClick = (item) => {
     setSelectedItem(item);
     setIsDetailsModalOpen(true);
   };
+
+  // Function to handle search
+  const handleSearch = (searchTerm) => {
+    setSearchTerm(searchTerm);
+  };
+
+  // Filtered items based on search term
+  const filteredItems = items.filter(item =>
+    item.itemName.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <div className={styles.main_container}>
@@ -34,27 +46,39 @@ function Main() {
           Sair
         </button>
       </nav>
-      <div>
-        <button onClick={() => setIsAddModalOpen(true)}>Add Item</button>
-        <AddItemModal
-          isOpen={isAddModalOpen}
-          onRequestClose={() => setIsAddModalOpen(false)}
-          onSubmit={handleAddItem}
+      <hr></hr>
+      <div className={styles.search_container}>
+        <input
+          type="text"
+          placeholder="Search..."
+          onChange={(e) => handleSearch(e.target.value)}
+          className={styles.search_input}
         />
+      </div>
+      <div>
         <ItemDetailsModal
           isOpen={isDetailsModalOpen}
           onRequestClose={() => setIsDetailsModalOpen(false)}
           selectedItem={selectedItem}
         />
-        <h2>Closet</h2>
+        
         <ul className={styles.item_list}>
-          {items.map((item) => (
+          {filteredItems.map((item) => (
             <li key={item.id} className={styles.item} onClick={() => handleItemClick(item)}>
               {item.itemImage && <img src={URL.createObjectURL(item.itemImage)} alt={item.itemName} className={styles.item_image} />}
             </li>
           ))}
         </ul>
+        
       </div>
+      <div className={styles.fixed_button_container}>
+        <button onClick={() => setIsAddModalOpen(true)} className={styles.fixed_button}>Add</button>
+      </div>
+      <AddItemModal
+        isOpen={isAddModalOpen}
+        onRequestClose={() => setIsAddModalOpen(false)}
+        onSubmit={handleAddItem}
+      />
     </div>
   );
 }
