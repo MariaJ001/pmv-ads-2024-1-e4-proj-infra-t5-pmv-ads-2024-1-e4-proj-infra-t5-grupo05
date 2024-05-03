@@ -34,7 +34,7 @@
 
 @media screen and (min-width: 768px) {
   .item {
-    flex: 0 0 calc(33.333% - 10px); /* Adjust the width for larger screens */
+    flex: 0 0 calc(10% - 10px); /* Adjust the width for larger screens */
   }
 }
 
